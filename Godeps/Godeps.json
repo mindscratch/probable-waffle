@@ -1,0 +1,24 @@
+{
+	"ImportPath": "github.com/mindscratch/probable-waffle",
+	"GoVersion": "go1.6.2",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/jtolds/gls",
+			"Comment": "v4.2.0",
+			"Rev": "8ddce2a84170772b95dd5d576c48d517b22cac63"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/assertions",
+			"Comment": "1.6.0-6-g40711f7",
+			"Rev": "40711f7748186bbf9c99977cd89f21ce1a229447"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/convey",
+			"Comment": "1.6.2",
+			"Rev": "d4c757aa9afd1e2fc1832aaab209b5794eb336e1"
+		}
+	]
+}

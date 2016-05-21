@@ -3,7 +3,7 @@ default: build
 build: dl
 
 dl:
-	@go build -o dl
+	@godep go build -o dl
 
 run:
-	@go run main.go
+	@godep go run main.go
