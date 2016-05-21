@@ -19,6 +19,10 @@ func (c *Client) Get() (string, error) {
 	return "", nil
 }
 
+func (c *Client) Url() *url.URL {
+	return c.url
+}
+
 func (c *Client) String() string {
 	return fmt.Sprintf("<CrateClient url=%s>", c.url.String())
 }

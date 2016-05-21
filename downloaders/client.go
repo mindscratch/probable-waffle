@@ -13,6 +13,7 @@ type DownloaderClient interface {
 	// Get a file and return the path to the file or an empty string
 	// if it was written to stdout.
 	Get() (string, error)
+	Url() *url.URL
 }
 
 var _ DownloaderClient = &crate.Client{}
