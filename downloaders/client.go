@@ -3,6 +3,7 @@ package downloaders
 import (
 	"errors"
 	"fmt"
+	"io"
 	"net/url"
 
 	"github.com/mindscratch/probable-waffle/config"
@@ -10,9 +11,8 @@ import (
 )
 
 type DownloaderClient interface {
-	// Get a file and return the path to the file or an empty string
-	// if it was written to stdout.
-	Get() (string, error)
+	// Get a file and write it using the given writer.
+	Get(w io.Writer) error
 	Url() *url.URL
 }
 
@@ -23,6 +23,9 @@ func New(config config.Config, downloadUri string) (DownloaderClient, error) {
 	if err != nil {
 		return nil, errors.New("Unable to parse download URI: " + err.Error())
 	}
+
+	var client DownloaderClient = nil
+
 	switch downloadUrl.Scheme {
 	case crate.Scheme:
 		actualUri := fmt.Sprintf("%s/_blobs/%s%s", config.Crate, downloadUrl.Host, downloadUrl.Path)
@@ -30,7 +33,14 @@ func New(config config.Config, downloadUri string) (DownloaderClient, error) {
 		if err != nil {
 			return nil, errors.New("Problem creating Crate download url: " + err.Error())
 		}
-		return crate.NewCrateClient(crateUrl)
+
+		client, err = crate.NewCrateClient(crateUrl)
+		if err != nil {
+			return nil, errors.New(fmt.Sprintf("Problem creating Crate client: %s", err.Error()))
+		}
+	default:
+		return nil, errors.New("Invalid URI scheme")
 	}
-	return nil, errors.New("Invalid URI scheme")
+
+	return client, nil
 }

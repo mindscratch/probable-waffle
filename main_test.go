@@ -13,7 +13,7 @@ func TestGetMetadataValue(t *testing.T) {
 			Convey("The value is returned", func() {
 				value, err := getMetadataValue("sample.data", "data_uri")
 				So(err, ShouldBeNil)
-				So(value, ShouldEqual, "crate://test-2016-05-18/abc123")
+				So(value, ShouldEqual, "crate://test/22596363b3de40b06f981fb85d82312e8c0ed511")
 			})
 		})
 

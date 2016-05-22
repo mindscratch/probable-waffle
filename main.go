@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"regexp"
@@ -33,22 +34,18 @@ func getMetadataValue(metadata_file, key string) (string, error) {
 }
 
 func main() {
-	// get the download uri from the metadata
-	// download the file
-
-	metadata_file := "sample.data"
-	key := "data_uri"
-	output_file := "output.data"
-	retries := 3
-	retry_delay := "5s"
-	fmt.Println("CONFIG:", metadata_file, key, output_file, retries, retry_delay)
-
 	flag.Parse()
 	appConfig, err := config.New()
 	if err != nil {
 		fmt.Printf("Configuration error: %s\n", err.Error())
 		os.Exit(1)
 	}
+
+	metadata_file := "sample.data"
+	key := "data_uri"
+	retries := 3
+	retry_delay := "5s"
+	fmt.Println("CONFIG:", metadata_file, key, appConfig.Output, retries, retry_delay)
 
 	downloadUri, err := getMetadataValue(metadata_file, key)
 	if err != nil {
@@ -60,4 +57,20 @@ func main() {
 	client, err := downloaders.New(appConfig, downloadUri)
 	fmt.Printf("client: %s\n", client)
 	fmt.Printf("err: %#v\n", err)
+
+	var outputWriter io.Writer = os.Stdout
+	if appConfig.Output != "" {
+		//TODO close file "f"
+		f, err := os.Create(appConfig.Output)
+		if err != nil {
+			fmt.Printf("Unable open %s for writing: %s\n", appConfig.Output, err.Error())
+			os.Exit(1)
+		}
+		outputWriter = f
+	}
+
+	err = client.Get(outputWriter)
+	if err != nil {
+		fmt.Printf("get err: %s\n", err.Error())
+	}
 }
